@@ -95,3 +95,34 @@ function Get-GPU {
 
     Get-GPU
 
+    function welcome {
+write-output "Welcome to planet $env:computername Overlord $env:username"
+$now = get-date -format 'HH:MM tt on dddd'
+write-output "It is $now."
+}
+
+welcome
+
+
+    function get-cpuinfo {
+$cimthing =get-ciminstance cim_processor
+($cimthing).Manufacturer
+($cimthing).name
+($cimthing).currentclockspeed
+($cimthing).maxclockspeed
+($cimthing).numberofcores
+}
+
+    function get-mydisks {
+	$disks = Get-Disk
+	$diskinfo = foreach ($d in $disks) {
+		new-object -typename psobject -property @{
+			Manufacturer=($d).Manufacturer;
+			Model=($d).model;
+			SerialNumber=($d).Serialnumber;
+			FirmwareRevision=($d).FirmwareVersion;
+			Size=($d).size
+		}
+	}
+$diskinfo |format-table -autosize
+}
